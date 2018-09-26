@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>particles</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" media="screen" href="css/style.css">
+</head>
+
+<body onload="init();">
+    <!-- particles.js container -->
+    <div id="particles-js"></div>
+    <button id="play-pause" onclick="handleControl();" type="button">pause</button>
+    <div id="simulations"></div>
+    <!-- scripts -->
+    <script src="js/particles.js"></script>
+    <script>
+    var playing = true,
+        config = [
+            { particle: "snow", json: "particles-snow.json" },
+            { particle: "swarm", json: "particles-swarm.json" }
+        ],
+        simulations = document.getElementById("simulations"),
+        playPause = document.getElementById("play-pause");
+
+    particlesJS.load("particles-js", config[0].json, function() {
+        //console.log('particles.js loaded - callback');
+    });
+
+    function init() {
+        for (var i = 0; i < config.length; i++) {
+            var button = document.createElement("button");
+            button.className = "button-control";
+            button.id = button.innerHTML = config[i].particle;
+            button.setAttribute('data-json', config[i].json);
+            button.addEventListener("click", handleSwitch);
+            simulations.appendChild(button);
+        }
+    }
+
+    function handleControl() {
+        if (playing) {
+            playing = false;
+            pJSDom[0].pJS.particles.move.enable = false;
+            playPause.innerHTML = "play";
+        } else {
+            playing = true;
+            pJSDom[0].pJS.particles.move.enable = true;
+            pJSDom[0].pJS.fn.particlesRefresh();
+            playPause.innerHTML = "pause";
+        }
+    }
+
+    function handleSwitch(e) {
+        window.pJSDom[0].pJS.fn.vendors.destroypJS();
+        window["pJSDom"] = [];
+        var json = e.target.getAttribute('data-json');
+        particlesJS.load("particles-js", json);
+    }
+    </script>
+</body>
+
+</html>
